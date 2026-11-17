@@ -114,6 +114,24 @@ The app runs at `http://localhost:3000`.
 
 ---
 
+## ☁️ Deploying to Vercel
+
+The app's Express API runs as a Vercel Function. Production data uses MongoDB Atlas, and uploaded receipt images use a **private Vercel Blob store**; local JSON persistence and local-disk uploads are not used in Vercel.
+
+1. Push the project to GitHub and import the repository in Vercel. Keep the project root as the Root Directory and use the repository's detected Express framework and `npm run build` build command.
+2. Create a MongoDB Atlas database and configure its network access so Vercel can connect to it.
+3. In the Vercel project, create a **private** Blob store and connect it to the project. Vercel supplies the runtime credentials through OIDC.
+4. Add these environment variables in Vercel for Production and Preview:
+   - `MONGO_URI` — MongoDB Atlas connection string
+   - `GEMINI_API_KEY` — Gemini API key
+   - `JWT_SECRET` — a random secret of at least 32 characters
+   - `JWT_REFRESH_SECRET` — a separate random secret of at least 32 characters
+5. Redeploy after saving the environment variables.
+
+The Vercel upload endpoint accepts receipt images up to 4 MB per file to stay within the Vercel Function request-size limit. Images are served through an authenticated API route, not public Blob URLs.
+
+---
+
 ## 🐳 Running with Docker Compose (App + MongoDB)
 
 To run the complete stack with an actual MongoDB 7.0 container:

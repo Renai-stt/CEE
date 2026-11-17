@@ -8,7 +8,7 @@ export interface StoredFile {
   originalName: string;
   mimeType: string;
   size: number;
-  url: string; // Public accessible URL
+  url: string; // URL used to retrieve the stored file
   filepath?: string; // Absolute path on disk when using local storage
 }
 
@@ -90,13 +90,13 @@ class VercelBlobStorageService implements IStorageService {
       filename: blob.pathname,
       originalName: file.originalname,
       mimeType: file.mimetype,
-      size: blob.size,
+      size: file.size,
       url: `/api/v1/receipts/image?pathname=${encodeURIComponent(blob.pathname)}`,
     };
   }
 
   async delete(filename: string): Promise<boolean> {
-    await del(filename, { access: 'private' });
+    await del(filename);
     return true;
   }
 

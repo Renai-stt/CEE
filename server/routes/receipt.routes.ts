@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, type Response } from 'express';
 import fs from 'fs';
 import { z } from 'zod';
 import { get } from '@vercel/blob';
@@ -53,7 +53,14 @@ const receiptSaveSchema = z.object({
 
 router.get('/image', async (req: AuthenticatedRequest, res: Response) => {
   const pathname = typeof req.query.pathname === 'string' ? req.query.pathname : '';
-  if (!pathname.startsWith(`receipts/${req.user!.id}/`)) {
+  const [folder, ownerId, filename, ...extraSegments] = pathname.split('/');
+  if (
+    folder !== 'receipts' ||
+    ownerId !== req.user!.id ||
+    !filename ||
+    filename.includes('..') ||
+    extraSegments.length > 0
+  ) {
     return res.status(404).json({ error: 'Receipt image not found.' });
   }
 

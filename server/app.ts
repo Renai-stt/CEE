@@ -48,9 +48,13 @@ export function createApp() {
     const mongoConnected = isConnectedToMongo();
     const mongoErr = getMongoConnectionError();
     return res.json({
-      status: 'ok',
+      status: process.env.VERCEL && !mongoConnected ? 'error' : 'ok',
       service: 'ไหน Receipt API',
-      database: mongoConnected ? 'MongoDB (Mongoose)' : 'Local File Persistence (Dev Mode)',
+      database: mongoConnected
+        ? 'MongoDB (Mongoose)'
+        : process.env.VERCEL
+          ? 'MongoDB unavailable'
+          : 'Local File Persistence (Dev Mode)',
       mongoConnected,
       mongoNotice: !mongoConnected && mongoErr ? mongoErr : undefined,
       geminiModel: config.geminiModel,

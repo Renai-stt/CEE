@@ -4,5 +4,8 @@ dist/
 coverage/
 .DS_Store
 *.log
+/public/index.html
+/public/assets/index-*.js
+/public/assets/index-*.css
 .env*
 !.env.example
