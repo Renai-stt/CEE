@@ -1,0 +1,6 @@
+{
+  "name": "Receipt Tracker",
+  "description": "Smart receipt scanner and expense manager with Gemini AI OCR, multi-currency support, spending analytics, and spreadsheet exports.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

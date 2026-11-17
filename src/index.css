@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-linen: #F5E9E2;
+  --color-linen-light: #FBF6F3;
+  --color-almond: #E3B5A4;
+  --color-almond-light: #F4DFD7;
+  --color-lobster: #D44D5C;
+  --color-lobster-hover: #BF3F4E;
+  --color-lobster-light: #F9E8EA;
+  --color-wine: #773344;
+  --color-wine-dark: #5C2734;
+  --color-wine-light: #EFE4E7;
+  --color-midnight: #160029;
+  --color-midnight-card: #240E38;
+  --color-midnight-subtle: #301748;
+}
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F8F3EF;
+    color: #160029;
+    @apply antialiased transition-colors duration-200;
+  }
+
+  .dark body {
+    background-color: #120022;
+    color: #F5E9E2;
+  }
+}
+
+/* Custom scrollbars matching Wine Plum & Almond Silk */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E3B5A4;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #773344;
+}

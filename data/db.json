@@ -1,0 +1,208 @@
+{
+  "users": [
+    {
+      "_id": "demo-user-default-uuid",
+      "email": "demo@receipttracker.app",
+      "passwordHash": "$2b$10$uE9xXNhOgeW0QGNVtv/.COSiUjWEFT0D4lPsi25jca72l/PzY4s3W",
+      "name": "Demo User (ผู้ใช้ทดลอง)",
+      "createdAt": "2026-11-07T15:09:56.892Z",
+      "updatedAt": "2026-11-07T15:09:56.892Z"
+    }
+  ],
+  "receipts": [
+    {
+      "_id": "rec-seed-1",
+      "userId": "demo-user-default-uuid",
+      "merchant": "7-Eleven Thailand (Silom Complex)",
+      "date": "2026-11-07",
+      "time": "14:25",
+      "category": "food",
+      "currency": "THB",
+      "paymentMethod": "PromptPay QR",
+      "subtotal": 89.72,
+      "tax": 6.28,
+      "discount": 0,
+      "serviceCharge": 0,
+      "total": 96,
+      "status": "confirmed",
+      "confidence": 0.98,
+      "notes": "ซื้อกาแฟและแซนด์วิชรองท้อง",
+      "createdAt": "2026-11-07T15:09:56.892Z",
+      "updatedAt": "2026-11-07T15:09:56.892Z",
+      "items": [
+        {
+          "name": "Iced Americano 16oz",
+          "quantity": 1,
+          "unitPrice": 45,
+          "total": 45
+        },
+        {
+          "name": "Ham & Cheese Croissant Toast",
+          "quantity": 1,
+          "unitPrice": 37,
+          "total": 37
+        },
+        {
+          "name": "Drinking Water 600ml",
+          "quantity": 2,
+          "unitPrice": 7,
+          "total": 14
+        }
+      ]
+    },
+    {
+      "_id": "rec-seed-2",
+      "userId": "demo-user-default-uuid",
+      "merchant": "Cafe Amazon (PTT Station)",
+      "date": "2026-11-04",
+      "time": "09:15",
+      "category": "food",
+      "currency": "THB",
+      "paymentMethod": "Credit Card",
+      "subtotal": 135,
+      "tax": 0,
+      "discount": 0,
+      "serviceCharge": 0,
+      "total": 135,
+      "status": "confirmed",
+      "confidence": 0.96,
+      "notes": "กาแฟเช้าวันทำงาน",
+      "createdAt": "2026-11-04T15:09:56.892Z",
+      "updatedAt": "2026-11-04T15:09:56.892Z",
+      "items": [
+        {
+          "name": "Amazon Extra Cold",
+          "quantity": 1,
+          "unitPrice": 75,
+          "total": 75
+        },
+        {
+          "name": "Matcha Green Tea Latte",
+          "quantity": 1,
+          "unitPrice": 60,
+          "total": 60
+        }
+      ]
+    },
+    {
+      "_id": "rec-seed-3",
+      "userId": "demo-user-default-uuid",
+      "merchant": "Lotus's Hypermarket Rama 4",
+      "date": "2026-11-02",
+      "time": "18:40",
+      "category": "groceries",
+      "currency": "THB",
+      "paymentMethod": "TrueMoney Wallet",
+      "subtotal": 1380,
+      "tax": 96.6,
+      "discount": 50,
+      "serviceCharge": 0,
+      "total": 1426.6,
+      "status": "confirmed",
+      "confidence": 0.99,
+      "notes": "ซื้อของสดและของใช้เข้าบ้านประจำสัปดาห์",
+      "createdAt": "2026-11-02T15:09:56.892Z",
+      "updatedAt": "2026-11-02T15:09:56.892Z",
+      "items": [
+        {
+          "name": "ข้าวหอมมะลิ 5 กก.",
+          "quantity": 1,
+          "unitPrice": 225,
+          "total": 225
+        },
+        {
+          "name": "อกไก่ซีพี 1 กก.",
+          "quantity": 2,
+          "unitPrice": 110,
+          "total": 220
+        },
+        {
+          "name": "ไข่ไก่สดเบอร์ 2 (แผง 30 ฟอง)",
+          "quantity": 1,
+          "unitPrice": 145,
+          "total": 145
+        },
+        {
+          "name": "นมสดเมจิ 2 ลิตร",
+          "quantity": 2,
+          "unitPrice": 96,
+          "total": 192
+        },
+        {
+          "name": "น้ำยาซักผ้า Breeze Excel 1400ml",
+          "quantity": 2,
+          "unitPrice": 159,
+          "total": 318
+        },
+        {
+          "name": "ผักและผลไม้สดรวม",
+          "quantity": 1,
+          "unitPrice": 326.6,
+          "total": 326.6
+        }
+      ]
+    },
+    {
+      "_id": "rec-seed-4",
+      "userId": "demo-user-default-uuid",
+      "merchant": "BTS Skytrain (Siam Station)",
+      "date": "2026-11-01",
+      "time": "08:10",
+      "category": "transport",
+      "currency": "THB",
+      "paymentMethod": "Rabbit Card",
+      "subtotal": 88,
+      "tax": 0,
+      "discount": 0,
+      "serviceCharge": 0,
+      "total": 88,
+      "status": "confirmed",
+      "confidence": 0.95,
+      "notes": "ค่าเดินทางรถไฟฟ้าไปทำงาน",
+      "createdAt": "2026-11-01T15:09:56.892Z",
+      "updatedAt": "2026-11-01T15:09:56.892Z",
+      "items": [
+        {
+          "name": "BTS Fare (On Nut to Asok)",
+          "quantity": 2,
+          "unitPrice": 44,
+          "total": 88
+        }
+      ]
+    },
+    {
+      "_id": "rec-seed-5",
+      "userId": "demo-user-default-uuid",
+      "merchant": "Central Department Store (Chidlom)",
+      "date": "2026-10-15",
+      "time": "16:30",
+      "category": "shopping",
+      "currency": "THB",
+      "paymentMethod": "Credit Card",
+      "subtotal": 2450,
+      "tax": 171.5,
+      "discount": 200,
+      "serviceCharge": 0,
+      "total": 2421.5,
+      "status": "confirmed",
+      "confidence": 0.97,
+      "notes": "ซื้อเสื้อเชิ้ตทำงานและเครื่องเขียน",
+      "createdAt": "2026-10-15T00:00:00.000Z",
+      "updatedAt": "2026-10-15T00:00:00.000Z",
+      "items": [
+        {
+          "name": "Oxford Formal Shirt Navy",
+          "quantity": 1,
+          "unitPrice": 1650,
+          "total": 1650
+        },
+        {
+          "name": "Notebook & Pen Set",
+          "quantity": 1,
+          "unitPrice": 800,
+          "total": 800
+        }
+      ]
+    }
+  ]
+}
