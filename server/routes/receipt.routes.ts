@@ -1,9 +1,12 @@
 import { Router, Response } from 'express';
+import fs from 'fs';
 import { z } from 'zod';
+import { get } from '@vercel/blob';
 import { requireAuth, AuthenticatedRequest } from '../middleware/auth.ts';
 import { uploadMiddleware, validateMagicBytes } from '../middleware/upload.ts';
 import { extractReceiptData, validateReceiptMath } from '../services/gemini.ts';
 import { ReceiptRepository } from '../db/repository.ts';
+import { storageService } from '../services/storage.ts';
 import { IReceipt } from '../../shared/types.ts';
 
 const router = Router();
@@ -48,6 +51,30 @@ const receiptSaveSchema = z.object({
   confidence: z.number().optional().default(1),
 });
 
+router.get('/image', async (req: AuthenticatedRequest, res: Response) => {
+  const pathname = typeof req.query.pathname === 'string' ? req.query.pathname : '';
+  if (!pathname.startsWith(`receipts/${req.user!.id}/`)) {
+    return res.status(404).json({ error: 'Receipt image not found.' });
+  }
+
+  try {
+    const blob = await get(pathname, { access: 'private' });
+    if (!blob || blob.statusCode !== 200) {
+      return res.status(404).json({ error: 'Receipt image not found.' });
+    }
+
+    const image = Buffer.from(await new Response(blob.stream).arrayBuffer());
+    return res
+      .set('Content-Type', blob.blob.contentType)
+      .set('Cache-Control', 'private, no-store')
+      .set('X-Content-Type-Options', 'nosniff')
+      .send(image);
+  } catch (err) {
+    console.error('Error retrieving receipt image:', err);
+    return res.status(502).json({ error: 'Failed to retrieve receipt image.' });
+  }
+});
+
 // POST /api/v1/receipts/upload (multipart, up to 10 files)
 router.post('/upload', uploadMiddleware.array('files', 10), async (req: AuthenticatedRequest, res: Response) => {
   const files = (req.files as Express.Multer.File[]) || [];
@@ -57,51 +84,46 @@ router.post('/upload', uploadMiddleware.array('files', 10), async (req: Authenti
 
   const results = await Promise.allSettled(
     files.map(async (file) => {
-      // Validate magic bytes
-      const isValidImage = await validateMagicBytes(file.path);
-      if (!isValidImage) {
-        throw new Error(`File ${file.originalname} does not appear to be a valid image format.`);
-      }
-
-      // Public URL to the uploaded file
-      const imageUrl = `/uploads/${file.filename}`;
-
       try {
-        const extraction = await extractReceiptData(file.path, file.mimetype);
-        const mathCheck = validateReceiptMath(extraction);
+        const isValidImage = await validateMagicBytes(file.path);
+        if (!isValidImage) {
+          throw new Error(`File ${file.originalname} does not appear to be a valid image format.`);
+        }
 
-        if (!extraction.isReceipt) {
-          return {
-            filename: file.filename,
-            originalName: file.originalname,
-            imageUrl,
-            extraction,
-            mathCheck,
-            isReceipt: false,
+        let result: Record<string, unknown>;
+        try {
+          const extraction = await extractReceiptData(file.path, file.mimetype);
+          const mathCheck = validateReceiptMath(extraction);
+          result = extraction.isReceipt
+            ? { extraction, mathCheck, isReceipt: true }
+            : {
+                extraction,
+                mathCheck,
+                isReceipt: false,
+                aiFailed: true,
+                error:
+                  extraction.notes ||
+                  'Image appears blurry or not a receipt. Please retake a clearer photo or fill manually.',
+              };
+        } catch (geminiErr: any) {
+          console.error(`Gemini extraction failed for ${file.originalname}:`, geminiErr);
+          result = {
             aiFailed: true,
-            error:
-              extraction.notes ||
-              'Image appears blurry or not a receipt. Please retake a clearer photo or fill manually.',
+            error: geminiErr?.message || 'AI failed to read receipt data. Please retry.',
           };
         }
 
+        const storedFile = await storageService.save(file, req.user!.id);
         return {
           filename: file.filename,
           originalName: file.originalname,
-          imageUrl,
-          extraction,
-          mathCheck,
-          isReceipt: true,
+          imageUrl: storedFile.url,
+          ...result,
         };
-      } catch (geminiErr: any) {
-        console.error(`Gemini extraction failed for ${file.originalname}:`, geminiErr);
-        return {
-          filename: file.filename,
-          originalName: file.originalname,
-          imageUrl,
-          aiFailed: true,
-          error: geminiErr?.message || 'AI failed to read receipt data. Please retry.',
-        };
+      } finally {
+        if (process.env.VERCEL) {
+          await fs.promises.rm(file.path, { force: true });
+        }
       }
     })
   );

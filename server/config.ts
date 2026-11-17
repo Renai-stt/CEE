@@ -37,11 +37,13 @@ export const config = {
   isDev: (process.env.NODE_ENV || 'development') === 'development',
   geminiApiKey: apiKey,
   geminiModel: modelName,
-  mongoUri: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/receipt_tracker',
+  mongoUri: process.env.MONGO_URI || (process.env.VERCEL ? '' : 'mongodb://127.0.0.1:27017/receipt_tracker'),
   jwtSecret: process.env.JWT_SECRET || 'receipt_tracker_jwt_secret_dev_key_32chars',
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'receipt_tracker_refresh_secret_dev_key_32chars',
   jwtExpiresIn: '2h',
   jwtRefreshExpiresIn: '7d',
-  uploadDir: path.resolve(process.cwd(), 'uploads'),
+  uploadDir: process.env.VERCEL
+    ? path.resolve('/tmp/receipt-uploads')
+    : path.resolve(process.cwd(), 'uploads'),
   appUrl: process.env.APP_URL || 'http://localhost:3000',
 };

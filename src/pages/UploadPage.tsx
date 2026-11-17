@@ -49,6 +49,7 @@ export const UploadPage: React.FC = () => {
 
   const [queue, setQueue] = useState<FileQueueItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const maxUploadSizeMb = __VERCEL__ ? 4 : 10;
 
   // Live Camera Modal State
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -188,7 +189,7 @@ export const UploadPage: React.FC = () => {
     const files = Array.from(fileList);
 
     for (const file of files) {
-      if (file.size > 10 * 1024 * 1024) {
+      if (file.size > maxUploadSizeMb * 1024 * 1024) {
         setQueue((prev) => [
           ...prev,
           {
@@ -196,7 +197,7 @@ export const UploadPage: React.FC = () => {
             file,
             previewUrl: '',
             status: 'failed',
-            error: `${file.name} exceeds 10MB limit.`,
+            error: `${file.name} exceeds ${maxUploadSizeMb}MB limit.`,
           },
         ]);
         continue;

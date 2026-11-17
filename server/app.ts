@@ -39,7 +39,9 @@ export function createApp() {
   app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
   // Serve uploaded receipt images
-  app.use('/uploads', express.static(config.uploadDir));
+  if (!process.env.VERCEL) {
+    app.use('/uploads', express.static(config.uploadDir));
+  }
 
   // Health check endpoint
   app.get('/api/v1/health', (_req, res) => {
@@ -58,8 +60,21 @@ export function createApp() {
   });
 
   // Ensure initial DB handshake completes before serving data routes
-  app.use('/api/v1', async (_req, _res, next) => {
+  app.use('/api/v1', async (_req, res, next) => {
     await waitForDatabase();
+    if (process.env.VERCEL) {
+      const missingConfig = ['MONGO_URI', 'JWT_SECRET', 'JWT_REFRESH_SECRET'].filter(
+        (name) => !process.env[name]
+      );
+      if (missingConfig.length > 0) {
+        return res.status(503).json({
+          error: `Missing required environment variables: ${missingConfig.join(', ')}`,
+        });
+      }
+      if (!isConnectedToMongo()) {
+        return res.status(503).json({ error: 'MongoDB is unavailable. Check MONGO_URI and Atlas network access.' });
+      }
+    }
     next();
   });
 

@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 export const uploadMiddleware = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10 MB limit per requirement
+    fileSize: process.env.VERCEL ? 4 * 1024 * 1024 : 10 * 1024 * 1024,
     files: 10, // accept multiple files at once
   },
   fileFilter: (_req, file, cb) => {
