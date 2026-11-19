@@ -3,26 +3,20 @@ import path from 'path';
 
 dotenv.config();
 
-const DEFAULT_GEMINI_MODEL = 'gemini-4-hydrogen';
+const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
 
 function resolveGeminiConfig() {
-  const rawModel = process.env.GEMINI_MODEL?.trim();
-  let apiKey = process.env.GEMINI_API_KEY || '';
+  const rawModel = (process.env.GEMINI_MODEL || process.env.gemini_model)?.trim();
+  let apiKey = (process.env.GEMINI_API_KEY || process.env.gemini_api_key || '')?.trim();
   let modelName = DEFAULT_GEMINI_MODEL;
 
-  const isInvalidOrDeprecated =
-    !rawModel ||
-    rawModel.startsWith('AQ.') ||
-    rawModel.startsWith('AIza') ||
-    rawModel.startsWith('gemini-1.') ||
-    rawModel.startsWith('gemini-2.0') ||
-    rawModel.startsWith('gemini-3.8');
-
-  if (rawModel && (rawModel.startsWith('AQ.') || rawModel.startsWith('AIza'))) {
-    if (!apiKey) apiKey = rawModel;
-    modelName = DEFAULT_GEMINI_MODEL;
-  } else if (!isInvalidOrDeprecated && (rawModel.startsWith('gemini-') || rawModel.startsWith('models/'))) {
-    modelName = rawModel;
+  if (rawModel) {
+    if (rawModel.startsWith('AQ.') || rawModel.startsWith('AIza')) {
+      if (!apiKey) apiKey = rawModel;
+      modelName = DEFAULT_GEMINI_MODEL;
+    } else {
+      modelName = rawModel;
+    }
   }
 
   return { apiKey, modelName };

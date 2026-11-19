@@ -5,7 +5,7 @@ import { config } from '../config.ts';
 import { GeminiExtractionResult, ReceiptCategory } from '../../shared/types.ts';
 
 let aiClient: GoogleGenAI | null = null;
-const FALLBACK_MODEL = 'gemini-4-hydrogen';
+const FALLBACK_MODEL = 'gemini-3.8-flash';
 
 function resolveMimeType(filePath: string, mimeType?: string): string {
   if (mimeType && mimeType.startsWith('image/') && mimeType !== 'image/jpg') {
@@ -246,7 +246,7 @@ Special Instructions for Thai Receipts:
       lastError = err;
       const msg = String(err?.message || '');
       const status = err?.status || err?.code;
-      // If configured model is not found/unsupported, fall back to gemini-4-hydrogen
+      // If configured model is not found/unsupported, fall back to gemini-3.8-flash
       if ((status === 404 || msg.includes('NOT_FOUND') || msg.includes('not found')) && modelToUse !== FALLBACK_MODEL) {
         console.warn(`[Gemini] Model "${modelToUse}" not found, falling back to ${FALLBACK_MODEL}`);
         modelToUse = FALLBACK_MODEL;
