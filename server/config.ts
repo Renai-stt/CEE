@@ -25,8 +25,7 @@ function resolveGeminiConfig() {
 const { apiKey, modelName } = resolveGeminiConfig();
 
 export const config = {
-  // AI Studio requires the dev server to run on port 3000
-  port: process.env.PORT === '8080' && process.env.NODE_ENV !== 'production' ? 3000 : parseInt(process.env.PORT || '3000', 10),
+  port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   isDev: (process.env.NODE_ENV || 'development') === 'development',
   geminiApiKey: apiKey,
