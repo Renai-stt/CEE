@@ -5,7 +5,7 @@ import { config } from '../config.ts';
 import { GeminiExtractionResult, ReceiptCategory } from '../../shared/types.ts';
 
 let aiClient: GoogleGenAI | null = null;
-const FALLBACK_MODEL = 'gemini-3.8-flash';
+const FALLBACK_MODEL = 'gemini-3.5-flash';
 
 function resolveMimeType(filePath: string, mimeType?: string): string {
   if (mimeType && mimeType.startsWith('image/') && mimeType !== 'image/jpg') {
@@ -282,11 +282,11 @@ Special Instructions for Thai Receipts:
   const normalizedDate = normalizeDate(parsed.date);
   const items = Array.isArray(parsed.items)
     ? parsed.items.map((it: any) => ({
-        name: String(it.name || 'Item').trim(),
-        quantity: Math.max(1, Number(it.quantity) || 1),
-        unitPrice: Number(it.unitPrice) || 0,
-        total: Number(it.total) || (Number(it.quantity || 1) * Number(it.unitPrice || 0)),
-      }))
+      name: String(it.name || 'Item').trim(),
+      quantity: Math.max(1, Number(it.quantity) || 1),
+      unitPrice: Number(it.unitPrice) || 0,
+      total: Number(it.total) || (Number(it.quantity || 1) * Number(it.unitPrice || 0)),
+    }))
     : [];
 
   const validCategories: ReceiptCategory[] = [
