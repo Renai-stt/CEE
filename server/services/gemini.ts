@@ -246,7 +246,7 @@ Special Instructions for Thai Receipts:
       lastError = err;
       const msg = String(err?.message || '');
       const status = err?.status || err?.code;
-      // If configured model is not found/unsupported, fall back to gemini-3.8-flash
+      // If configured model is not found/unsupported, fall back to gemini-3.5-flash
       if ((status === 404 || msg.includes('NOT_FOUND') || msg.includes('not found')) && modelToUse !== FALLBACK_MODEL) {
         console.warn(`[Gemini] Model "${modelToUse}" not found, falling back to ${FALLBACK_MODEL}`);
         modelToUse = FALLBACK_MODEL;
