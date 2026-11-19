@@ -107,7 +107,7 @@ export const Navbar: React.FC = () => {
               value={navSearch}
               onChange={(e) => setNavSearch(e.target.value)}
               placeholder="Search receipt, merchant..."
-              className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/30 pl-9 pr-3 py-1.5 text-xs text-[#160029] placeholder-[#773344]/50 focus:border-[#D44D5C] focus:bg-white focus:outline-none dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
+              className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/30 pl-9 pr-3 py-1.5 text-xs text-[#160029] placeholder-[#773344]/50 focus:border-[#D44D5C] focus:outline-none dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
             />
             <Search className="absolute left-3 h-3.5 w-3.5 text-[#773344]/60 dark:text-[#E3B5A4]/60" />
           </form>

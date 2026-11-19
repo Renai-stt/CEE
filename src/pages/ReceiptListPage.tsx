@@ -191,7 +191,7 @@ export const ReceiptListPage: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('searchPlaceholder')}
-              className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/30 pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#160029] focus:border-[#D44D5C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344] dark:bg-[#240E38] dark:text-[#F5E9E2]"
+              className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/30 pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#160029] focus:border-[#D44D5C] focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344] dark:bg-[#240E38] dark:text-[#F5E9E2]"
             />
           </div>
 

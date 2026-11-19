@@ -81,7 +81,7 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('emailPlaceholder')}
-                  className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/20 pl-10 pr-3.5 py-2.5 text-xs text-[#160029] placeholder-[#773344]/40 focus:border-[#D44D5C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
+                  className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/20 pl-10 pr-3.5 py-2.5 text-xs text-[#160029] placeholder-[#773344]/40 focus:border-[#D44D5C] focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
                 />
               </div>
             </div>
@@ -98,7 +98,7 @@ export const LoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/20 pl-10 pr-3.5 py-2.5 text-xs text-[#160029] placeholder-[#773344]/40 focus:border-[#D44D5C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
+                  className="w-full rounded-2xl border border-[#E3B5A4]/60 bg-[#F5E9E2]/20 pl-10 pr-3.5 py-2.5 text-xs text-[#160029] placeholder-[#773344]/40 focus:border-[#D44D5C] focus:outline-none focus:ring-2 focus:ring-[#D44D5C]/20 dark:border-[#773344]/60 dark:bg-[#240E38] dark:text-[#F5E9E2] dark:placeholder-[#E3B5A4]/40"
                 />
               </div>
             </div>
