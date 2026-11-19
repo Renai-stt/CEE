@@ -81,8 +81,9 @@ class VercelBlobStorageService implements IStorageService {
     const data = file.buffer || await fs.promises.readFile(file.path);
     const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
     const filename = `receipt_${Date.now()}_${Math.random().toString(36).substring(2, 9)}${ext}`;
+    const accessType = (process.env.VERCEL_BLOB_ACCESS as 'public' | 'private') || 'public';
     const blob = await put(`receipts/${ownerId}/${filename}`, data, {
-      access: 'private',
+      access: accessType,
       contentType: file.mimetype,
     });
 
@@ -91,20 +92,27 @@ class VercelBlobStorageService implements IStorageService {
       originalName: file.originalname,
       mimeType: file.mimetype,
       size: file.size,
-      url: `/api/v1/receipts/image?pathname=${encodeURIComponent(blob.pathname)}`,
+      url: accessType === 'private'
+        ? `/api/v1/receipts/image?pathname=${encodeURIComponent(blob.pathname)}`
+        : blob.url,
     };
   }
 
   async delete(filename: string): Promise<boolean> {
-    await del(filename);
-    return true;
+    try {
+      await del(filename);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   getFilePath(_filename: string): string {
-    throw new Error('Private Vercel Blob files do not have a local file path.');
+    throw new Error('Vercel Blob files do not have a local file path.');
   }
 }
 
-export const storageService: IStorageService = process.env.VERCEL
-  ? new VercelBlobStorageService()
-  : new LocalStorageService();
+export const storageService: IStorageService =
+  process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN
+    ? new VercelBlobStorageService()
+    : new LocalStorageService();

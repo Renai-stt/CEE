@@ -19,21 +19,13 @@ function resolveMimeType(filePath: string, mimeType?: string): string {
 }
 
 function getAiClient(): GoogleGenAI {
-  if (!aiClient) {
-    const apiKey = config.geminiApiKey || process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY is not configured. Please check Settings > Secrets.');
-    }
-    aiClient = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        },
-      },
-    });
+  const apiKey = (config.geminiApiKey || process.env.gemini_api_key || process.env.GEMINI_API_KEY)?.trim();
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is not configured. Please check your environment variables or Settings > Secrets.');
   }
-  return aiClient;
+  return new GoogleGenAI({
+    apiKey,
+  });
 }
 
 /**
@@ -212,13 +204,13 @@ Special Instructions for Thai Receipts:
     ],
   };
 
-  let modelToUse = config.geminiModel || FALLBACK_MODEL;
+  let modelToUse = (config.geminiModel || process.env.gemini_model || process.env.GEMINI_MODEL || FALLBACK_MODEL).trim();
   let response: any = null;
   let lastError: any = null;
+  let enableThinking = modelToUse.includes('gemini-4') || modelToUse.includes('gemini-3');
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const useThinkingConfig = modelToUse.includes('gemini-4') || modelToUse.includes('gemini-3');
       response = await ai.models.generateContent({
         model: modelToUse,
         contents: {
@@ -238,7 +230,7 @@ Special Instructions for Thai Receipts:
           systemInstruction,
           responseMimeType: 'application/json',
           responseSchema,
-          ...(useThinkingConfig ? { thinkingConfig: { thinkingLevel: ThinkingLevel.LOW } } : {}),
+          ...(enableThinking ? { thinkingConfig: { thinkingLevel: ThinkingLevel.LOW } } : {}),
         },
       });
       break;
@@ -246,12 +238,20 @@ Special Instructions for Thai Receipts:
       lastError = err;
       const msg = String(err?.message || '');
       const status = err?.status || err?.code;
-      // If configured model is not found/unsupported, fall back to gemini-3.5-flash
+
+      // If configured model is not found/unsupported, fall back to FALLBACK_MODEL
       if ((status === 404 || msg.includes('NOT_FOUND') || msg.includes('not found')) && modelToUse !== FALLBACK_MODEL) {
         console.warn(`[Gemini] Model "${modelToUse}" not found, falling back to ${FALLBACK_MODEL}`);
         modelToUse = FALLBACK_MODEL;
         continue;
       }
+
+      // If thinkingConfig is not supported for this model, retry without it
+      if (enableThinking && (msg.includes('thinkingConfig') || msg.includes('ThinkingLevel') || msg.includes('unknown field') || msg.includes('Invalid'))) {
+        enableThinking = false;
+        continue;
+      }
+
       // Retry transient 429/5xx with backoff
       if ((status === 429 || status >= 500 || msg.includes('ECONNRESET') || msg.includes('fetch failed')) && attempt < 2) {
         await new Promise((r) => setTimeout(r, 700 * (attempt + 1)));

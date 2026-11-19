@@ -65,7 +65,8 @@ router.get('/image', async (req: AuthenticatedRequest, res: Response) => {
   }
 
   try {
-    const blob = await get(pathname, { access: 'private' });
+    const accessType = (process.env.VERCEL_BLOB_ACCESS as 'public' | 'private') || 'public';
+    const blob = await get(pathname, { access: accessType });
     if (!blob || blob.statusCode !== 200) {
       return res.status(404).json({ error: 'Receipt image not found.' });
     }
@@ -104,14 +105,14 @@ router.post('/upload', uploadMiddleware.array('files', 10), async (req: Authenti
           result = extraction.isReceipt
             ? { extraction, mathCheck, isReceipt: true }
             : {
-                extraction,
-                mathCheck,
-                isReceipt: false,
-                aiFailed: true,
-                error:
-                  extraction.notes ||
-                  'Image appears blurry or not a receipt. Please retake a clearer photo or fill manually.',
-              };
+              extraction,
+              mathCheck,
+              isReceipt: false,
+              aiFailed: true,
+              error:
+                extraction.notes ||
+                'Image appears blurry or not a receipt. Please retake a clearer photo or fill manually.',
+            };
         } catch (geminiErr: any) {
           console.error(`Gemini extraction failed for ${file.originalname}:`, geminiErr);
           result = {

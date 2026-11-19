@@ -11,6 +11,10 @@ mongoose.connection.on('error', (err) => {
 });
 
 export function connectDatabase(): Promise<boolean> {
+  if (mongoose.connection.readyState === 1) {
+    isMongoConnected = true;
+    return Promise.resolve(true);
+  }
   if (connectionPromise) {
     return connectionPromise;
   }
@@ -25,7 +29,7 @@ export function connectDatabase(): Promise<boolean> {
     const maskedUri = config.mongoUri.replace(/:([^:@]{3,})@/, ':***@');
     const isLocal =
       config.mongoUri.includes('127.0.0.1') || config.mongoUri.includes('localhost');
-    const timeoutMs = isLocal ? 500 : 3000;
+    const timeoutMs = isLocal ? 500 : 7000;
 
     try {
       console.log(`[Database] Attempting MongoDB connection to ${maskedUri}...`);
@@ -33,7 +37,7 @@ export function connectDatabase(): Promise<boolean> {
       await mongoose.connect(config.mongoUri, {
         serverSelectionTimeoutMS: timeoutMs,
         connectTimeoutMS: timeoutMs,
-        autoIndex: true,
+        autoIndex: false, // autoIndex should be false in production serverless for speed
       });
 
       isMongoConnected = true;
@@ -43,6 +47,7 @@ export function connectDatabase(): Promise<boolean> {
     } catch (err: any) {
       isMongoConnected = false;
       mongoConnectionError = err.message;
+      connectionPromise = null; // Reset so next invocation can retry connecting
 
       // Disconnect to prevent pending background socket retries
       try {
@@ -73,7 +78,7 @@ export function connectDatabase(): Promise<boolean> {
   return connectionPromise;
 }
 
-export async function waitForDatabase(maxWaitMs = 3500): Promise<void> {
+export async function waitForDatabase(maxWaitMs = 7500): Promise<void> {
   if (!connectionPromise) return;
   await Promise.race([
     connectionPromise.then(() => undefined),
