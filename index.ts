@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import { createApp } from './server/app.ts';
 import { connectDatabase } from './server/db/connection.ts';
@@ -9,6 +10,10 @@ if (process.env.VERCEL) {
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api/')) {
       return next();
+    }
+    const distHtml = path.resolve(process.cwd(), 'dist/index.html');
+    if (fs.existsSync(distHtml)) {
+      return res.sendFile(distHtml);
     }
     return res.sendFile(path.resolve(process.cwd(), 'public/index.html'));
   });

@@ -1,7 +1,8 @@
 {
+  "outputDirectory": "dist",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "public/**",
+      "includeFiles": "dist/**",
       "maxDuration": 60
     }
   },

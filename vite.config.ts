@@ -12,9 +12,7 @@ export default defineConfig(() => {
       },
     },
     build: {
-      outDir: 'public',
-      emptyOutDir: false,
-      copyPublicDir: false,
+      outDir: 'dist',
     },
     define: {
       __VERCEL__: JSON.stringify(Boolean(process.env.VERCEL)),
