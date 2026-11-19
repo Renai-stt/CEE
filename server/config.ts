@@ -3,7 +3,7 @@ import path from 'path';
 
 dotenv.config();
 
-const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
+const DEFAULT_GEMINI_MODEL = 'gemini-4-hydrogen';
 
 function resolveGeminiConfig() {
   const rawModel = (process.env.GEMINI_MODEL || process.env.gemini_model)?.trim();
